@@ -67,7 +67,7 @@ class Game:
     def start_game(self):
 
         if self.discord is not None:
-            discord.say('A game has been started')
+            self.discord.say('A game has been started')
 
         #settings
         duration_hours = 0
