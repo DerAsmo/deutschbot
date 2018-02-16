@@ -66,7 +66,7 @@ def main():
             get_steem_conn(),
             communitybot.settings.BOT_ACCOUNT,
         )
-        c.start_game();
+        c.start_game()
 
 if __name__ == '__main__':
     main()

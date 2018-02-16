@@ -3,6 +3,7 @@ import time
 import uuid
 
 from steem.commit import Commit
+import discord
 
 class Game:
 
@@ -62,7 +63,10 @@ class Game:
 
         return output
 
-    def start_game(self):
+    def start_game(self, discordbot = None):
+
+        if(discordbot):
+            discordbot.say('A game has been started')
 
         #settings
         duration_hours = 0

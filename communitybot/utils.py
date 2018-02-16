@@ -156,9 +156,9 @@ def get_curators():
 def url(p):
     return "https://steemit.com/@%s/%s" % (p.get("author"), p.get("permlink"))
 
-def start_game():
+def start_game(discordbot):
     c = Game(
         get_steem_conn(),
         communitybot.settings.BOT_ACCOUNT,
     )
-    c.start_game();
+    c.start_game()
