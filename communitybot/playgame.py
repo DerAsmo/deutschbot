@@ -39,11 +39,14 @@ class Game:
     def post(self, title, body, author, reply_identifier=None):
         if self.debug:
             permlink = self.get_sample_comment(author)
+            permlink = self.get_sample_comment(author)
+            print('---')
             print('Called post but post will not be submitted')
-            print('Function was called with %(author) as author and %(title) as the title' % {'author': author, 'title': title})
-            print('A permlink was created: %(permlink)' % {'permlink': permlink})
+            print('Function was called with %(auth)s as author and %(ttl)s as the title' % {'auth': author, 'ttl': title})
+            print('A permlink was created: %(link)s' % {'link': permlink})
             print('The posts content:')
             print(body)
+
         else:
             permlink = self.build_permlink()
             self.commit.post(title, body, author, permlink, reply_identifier)
@@ -55,12 +58,18 @@ class Game:
 
         for voter, result in results.items():
             oLine = '<div>' + voter + ': ' + str(result) + '</div>'
-            print(oLine)
             output = output + oLine
 
         return output
 
     def start_game(self):
+
+        #settings
+        duration_hours = 0
+        duration_minutes = 0
+        duration_seconds = 5
+
+        limit = 2
 
         # 1. create post
         title = 'testing a bot'
@@ -70,12 +79,8 @@ class Game:
         # 2. catch upvotes and create comments
         postid = "@" + self.bot_account + "/" + permlink;
         start = time.time()
-        hours = 0
-        minutes = 0
-        seconds = 15
         duration = hours * 360 + minutes * 60 + seconds
-        
-        limit = 2;
+
         voters = []
         permlinks ={}
 
