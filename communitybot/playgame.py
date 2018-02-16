@@ -39,6 +39,11 @@ class Game:
     def post(self, title, body, author, reply_identifier=None):
         if self.debug:
             permlink = self.get_sample_comment(author)
+            print('Called post but post will not be submitted')
+            print('Function was called with %(author) as author and %(title) as the title' % {'author': author, 'title': title})
+            print('A permlink was created: %(permlink)' % {'permlink': permlink})
+            print('The posts content:')
+            print(body)
         else:
             permlink = self.build_permlink()
             self.commit.post(title, body, author, permlink, reply_identifier)
@@ -58,8 +63,8 @@ class Game:
     def start_game(self):
 
         # 1. create post
-        title = 'test title'
-        body = 'test body'
+        title = 'testing a bot'
+        body = 'This post is ment for testing puposes. You can read in more detail what it\'s all about in the [introdutction post](https://steemit.com/@derasmo/vorstellung-von-mir-und-meiner-projektidee).'
         permlink = self.post(title, body, self.bot_account)
 
         # 2. catch upvotes and create comments
@@ -90,7 +95,8 @@ class Game:
                                 permlinks[vote['voter']] = self.post('', body, vote['voter'], postid)
                             elif self.debug == bool(0):
                                 voters.append(vote['voter'])
-                                permlinks[vote['voter']] = self.post('', body, self.bot_account, postid)
+                                comment_body = 'comment created for ' + vote['voter']
+                                permlinks[vote['voter']] = self.post('', comment_body, self.bot_account, postid)
 
             time.sleep(5)
 
