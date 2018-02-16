@@ -11,10 +11,10 @@ class Game:
         self.commit = Commit(steemd_instance=self.s)
         self.bot_account = bot_account
         self.debug = true
-        self.sample = 'flurgx'
+        self.sample = 'derasmo'
 
     def get_sample_comment(self, user):
-        data = {'flurgx' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t210718018z', 'kurodevs' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t203220853z'}
+        data = {'derasmo' :  'vorstellung-von-mir-und-meiner-projektidee', 'flurgx' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t210718018z', 'kurodevs' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t203220853z'}
         
         return data[user]
 
@@ -72,9 +72,11 @@ class Game:
                             voters.append(vote['voter'])
 
                             if self.debug:
-                                self.sample = vote['voter']
+                                comment_permlink = self.post('', body, vote['voter'], postid)
+                            else:
+                                comment_permlink = self.post('', body, self.bot_account, postid)
 
-                            permlinks[vote['voter']] = self.post('', body, self.bot_account, postid)
+                            permlinks[vote['voter']] = comment_permlink
             time.sleep(5)
 
         # 3. post summary
