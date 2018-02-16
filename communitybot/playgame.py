@@ -11,19 +11,21 @@ class Game:
         self.commit = Commit(steemd_instance=self.s)
         self.bot_account = bot_account
         self.debug = true
-        self.sample = 'derasmo'
 
     def get_sample_comment(self, user):
         data = {'derasmo' :  'vorstellung-von-mir-und-meiner-projektidee', 'flurgx' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t210718018z', 'kurodevs' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t203220853z'}
-        
-        return data[user]
+
+        if user in data:
+            return data[user]
+
+        return bool(0)
 
     def build_permlink(self):
         return str(uuid.uuid4())
 
     def post(self, title, body, author, reply_identifier=None):
         if self.debug:
-            permlink = get_sample_comment(self.sample)
+            permlink = get_sample_comment(author)
         else:
             permlink = self.build_permlink()
             self.commit.post(title, body, author, permlink, reply_identifier)
@@ -71,9 +73,9 @@ class Game:
                         if vote['voter'] not in voters:
                             voters.append(vote['voter'])
 
-                            if self.debug:
+                            if self.debug and self.get_sample_comment(vote['voter']) != 0:
                                 comment_permlink = self.post('', body, vote['voter'], postid)
-                            else:
+                            elif self.debug == bool(0):
                                 comment_permlink = self.post('', body, self.bot_account, postid)
 
                             permlinks[vote['voter']] = comment_permlink
