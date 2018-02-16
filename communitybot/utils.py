@@ -161,4 +161,4 @@ def start_game(discordbot):
         get_steem_conn(),
         communitybot.settings.BOT_ACCOUNT,
     )
-    c.start_game()
+    c.start_game(discordbot)

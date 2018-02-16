@@ -11,8 +11,10 @@ from communitybot.utils import (
     get_curators,
     get_help_message,
     get_option,
-    set_option
+    set_option,
+    start_game
 )
+from communitybot.playgame import Game
 
 from discord.ext.commands import Bot
 
