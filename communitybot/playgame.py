@@ -21,7 +21,7 @@ class Game:
         return bool(0)
 
     def get_valid_votes(self, votes, limit):
-        v_votes = {}
+        v_votes = []
         s_votes = sorted(votes, key=lambda tmp: tmp['time'])
 
         if self.debug:
@@ -31,7 +31,7 @@ class Game:
         else:
             v_votes = s_votes
 
-        return itertools.islice(s_votes, limit)
+        return itertools.islice(v_votes, limit)
 
     def build_permlink(self):
         return str(uuid.uuid4())
@@ -80,9 +80,9 @@ class Game:
 
                 if len(votes) > 0 :
                     # sort votes by time and cut off above limit
-                    s_votes = itertools.islice(sorted(votes, key=lambda tmp: tmp['time']), limit)
-    
-                    for vote in s_votes:
+                    v_votes = self.get_valid_votes(votes, limit)
+
+                    for vote in v_votes:
                         if vote['voter'] not in voters:
 
                             if self.debug and self.get_sample_comment(vote['voter']) != bool(0):
