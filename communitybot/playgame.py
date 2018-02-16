@@ -4,6 +4,7 @@ import uuid
 import discord
 
 from steem.commit import Commit
+from discord.ext.commands import bot
 
 class Game:
 

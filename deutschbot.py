@@ -4,8 +4,7 @@ import logging
 
 import communitybot.settings
 from communitybot.curate import Curator
-from communitybot.playgame import Game
-from communitybot.utils import add_discord_user, get_steem_conn
+from communitybot.utils import add_discord_user, get_steem_conn, start_game
 from communitybot.utils import get_option
 
 logger = logging.getLogger(__name__)
@@ -62,11 +61,7 @@ def main():
         logger.info("Starting from block %s", starting_point)
         c.listen_blocks(starting_point=starting_point)
     elif runner == "playgame":
-        c = Game(
-            get_steem_conn(),
-            communitybot.settings.BOT_ACCOUNT,
-        )
-        c.start_game()
+        start_game()
 
 if __name__ == '__main__':
     main()
