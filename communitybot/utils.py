@@ -159,6 +159,7 @@ def url(p):
 def start_game(discordbot):
     c = Game(
         get_steem_conn(),
-        communitybot.settings.BOT_ACCOUNT,
+        BOT_ACCOUNT,
+        discordbot
     )
-    c.start_game(discordbot)
+    c.start_game()

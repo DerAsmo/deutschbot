@@ -1,17 +1,18 @@
 import itertools
 import time
 import uuid
+import discord
 
 from steem.commit import Commit
-import discord
 
 class Game:
 
-    def __init__(self, steemd_instance, bot_account):
+    def __init__(self, steemd_instance, bot_account, discordbot=None):
         self.s = steemd_instance
         self.commit = Commit(steemd_instance=self.s)
         self.bot_account = bot_account
         self.debug = bool(1)
+        self.discord = discordbot
 
     def get_sample_comment(self, user):
         data = {'derasmo' :  'vorstellung-von-mir-und-meiner-projektidee', 'flurgx' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t210718018z', 'kurodevs' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t203220853z'}
@@ -63,10 +64,10 @@ class Game:
 
         return output
 
-    def start_game(self, discordbot = None):
+    def start_game(self):
 
-        if(discordbot):
-            discordbot.say('A game has been started')
+        if self.discord is not None:
+            discord.say('A game has been started')
 
         #settings
         duration_hours = 0

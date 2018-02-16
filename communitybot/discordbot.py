@@ -1,6 +1,6 @@
 import logging
 
-from communitybot.settings import THRESHOLD_OPTION_ID
+from communitybot.settings import THRESHOLD_OPTION_ID, BOT_ACCOUNT
 from communitybot.utils import (
     is_authorized,
     add_to_blacklist,
