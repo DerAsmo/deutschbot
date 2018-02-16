@@ -1,8 +1,9 @@
 import dataset
 from datetime import datetime
 import re
-from communitybot.settings import DB_CONNECTION_URI, NODES, BOT_POSTING_KEY
+from communitybot.settings import DB_CONNECTION_URI, NODES, BOT_POSTING_KEY, BOT_ACCOUNT
 from steem import Steem
+from communitybot.playgame import Game
 
 _db_conn = None
 _steem_conn = None
@@ -154,3 +155,10 @@ def get_curators():
 
 def url(p):
     return "https://steemit.com/@%s/%s" % (p.get("author"), p.get("permlink"))
+
+def start_game():
+    c = Game(
+        get_steem_conn(),
+        communitybot.settings.BOT_ACCOUNT,
+    )
+    c.start_game();

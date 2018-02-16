@@ -140,6 +140,15 @@ async def list():
     curators = [c["account"] for c in get_curators()]
     await bot.say("**Current active curators**: " + ", ".join(curators))
 
+@bot.group(pass_context=True)
+async def game(ctx):
+    if ctx.invoked_subcommand is None:
+        await bot.say('Usage: $game start')
+
+@curators.command()
+async def start():
+    curators = [c["account"] for c in get_curators()]
+    await bot.say("**Current active curators**: " + ", ".join(curators))
 
 @bot.group(pass_context=True)
 async def threshold(ctx):

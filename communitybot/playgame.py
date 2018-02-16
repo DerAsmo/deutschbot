@@ -79,7 +79,7 @@ class Game:
         # 2. catch upvotes and create comments
         postid = "@" + self.bot_account + "/" + permlink;
         start = time.time()
-        duration = hours * 360 + minutes * 60 + seconds
+        duration = duration_hours * 360 + duration_minutes * 60 + duration_seconds
 
         voters = []
         permlinks ={}
@@ -94,13 +94,13 @@ class Game:
 
                     for vote in v_votes:
                         if vote['voter'] not in voters:
+                            comment_body = 'comment created for ' + vote['voter']
 
                             if self.debug and self.get_sample_comment(vote['voter']) != bool(0):
                                 voters.append(vote['voter'])
-                                permlinks[vote['voter']] = self.post('', body, vote['voter'], postid)
+                                permlinks[vote['voter']] = self.post('', comment_body, vote['voter'], postid)
                             elif self.debug == bool(0):
                                 voters.append(vote['voter'])
-                                comment_body = 'comment created for ' + vote['voter']
                                 permlinks[vote['voter']] = self.post('', comment_body, self.bot_account, postid)
 
             time.sleep(5)
