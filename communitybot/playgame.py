@@ -15,6 +15,9 @@ class Game:
         self.bot_account = bot_account
         self.debug = bool(1)
 
+    def build_permlink(self):
+        return str(uuid.uuid4())
+
     def get_sample_comment(self, user):
         data = {'derasmo' :  'vorstellung-von-mir-und-meiner-projektidee', 'flurgx' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t210718018z', 'kurodevs' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t203220853z'}
 
@@ -36,8 +39,24 @@ class Game:
 
         return itertools.islice(v_votes, limit)
 
-    def build_permlink(self):
-        return str(uuid.uuid4())
+    def post_to_webhooks(self, score):
+
+        hook = Webhook(None)
+        hook.set_author(
+            name=self.bot_account,
+            url="http://steemit.com/@%s" % self.bot_account,
+            icon="https://img.busy.org/@%s?height=100&width=100" %
+                 self.bot_account,
+        )
+
+        hook.add_field(
+            name="Score",
+            value=score,
+        )
+
+        for hook_url in HOOKS:
+            hook.url = hook_url
+            hook.post()
 
     def post(self, title, body, author, reply_identifier=None):
         if self.debug:
@@ -67,9 +86,7 @@ class Game:
 
     def start_game(self):
 
-        from communitybot.discordbot import bot
-        bot.run(communitybot.settings.BOT_TOKEN)
-        # self.discord.say('A game has been started')
+        self.post_to_webhooks('test')
 
         #settings
         duration_hours = 0
