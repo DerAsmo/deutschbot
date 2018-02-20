@@ -78,14 +78,14 @@ class Game:
         return permlink;
 
     def evaluate(self, results):
-        output = '<div>The game has finished. The voting results are:</div>'
+        output = '<div>The game has finished. Voting results are:</div>'
 
         for voter, result in results.items():
             oLine = '<div>' + voter + ': ' + str(result) + '</div>'
             output = output + oLine
 
         thanks = '<div>Thanks for participating. If you want to support me in this project please consider voting on this comment.</div>'
-        output = output
+        output = output + thanks
 
         return output
 
@@ -111,7 +111,7 @@ class Game:
             {'account': '@markus.light', 'weight': 3750},
             {'account': '@reeceypie', 'weight': 3750}
         ]
-        
+
         permlink = self.post(title, body, self.bot_account, permlink=permlink, beneficiaries=beneficiaries)
 
         # 2. catch upvotes and create comments
@@ -148,7 +148,7 @@ class Game:
                                                             {'account': '@reeceypie', 'weight': 2500},
                                                             {'account': '@spaminator', 'weight': 2500}
                                                         ]
-                                comment_body = vote['voter'] + 'is collecting for @spaminator. In Addition to the users mentioned in the post @spaminator will receive a share. Please vote if you want them to win.'
+                                comment_body = '@' + vote['voter'] + 'is collecting for @spaminator. In Addition to the users mentioned in the post @spaminator will receive a share. Please vote if you want them to win.'
 
                             if self.debug and self.get_sample_comment(vote['voter']) != bool(0):
                                 self.post_to_webhooks( vote['voter'] + ' joined the game.')
@@ -157,6 +157,7 @@ class Game:
                             elif self.debug == bool(0):
                                 self.post_to_webhooks( vote['voter'] + ' joined the game.')
                                 voters.append(vote['voter'])
+                                permlink = 'testing-a-bot-bot-bot-comment-' + len(voters)
                                 permlinks[vote['voter']] = self.post('', comment_body, self.bot_account, reply_identifier=postid, beneficiaries=comment_beneficiaries)
 
             time.sleep(5)
@@ -173,4 +174,4 @@ class Game:
 
         results_body = self.evaluate(results)
         self.post_to_webhooks(results_body)
-        self.post('', results_body, self.bot_account, postid)
+        self.post('', results_body, self.bot_account, reply_identifier=postid)

@@ -148,8 +148,9 @@ async def game(ctx):
 
 @game.command()
 async def start():
+    await bot.say("**starting a game**")
     start_game()
-    await bot.say("**Game started**")
+    await bot.say("**game has been executed**")
 
 @bot.group(pass_context=True)
 async def threshold(ctx):
