@@ -4,16 +4,16 @@ import uuid
 import discord
 
 from steem.commit import Commit
-from discord.ext.commands import Bot
+
+import settings
 
 class Game:
 
-    def __init__(self, steemd_instance, bot_account, discordbot=None):
+    def __init__(self, steemd_instance, bot_account):
         self.s = steemd_instance
         self.commit = Commit(steemd_instance=self.s)
         self.bot_account = bot_account
         self.debug = bool(1)
-        self.discord = discordbot
 
     def get_sample_comment(self, user):
         data = {'derasmo' :  'vorstellung-von-mir-und-meiner-projektidee', 'flurgx' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t210718018z', 'kurodevs' : 're-derasmo-vorstellung-von-mir-und-meiner-projektidee-20180213t203220853z'}
@@ -67,8 +67,9 @@ class Game:
 
     def start_game(self):
 
-        if self.discord is not None:
-            self.discord.say('A game has been started')
+        from communitybot.discordbot import bot
+        bot.run(communitybot.settings.BOT_TOKEN)
+        # self.discord.say('A game has been started')
 
         #settings
         duration_hours = 0

@@ -14,7 +14,6 @@ from communitybot.utils import (
     set_option,
     start_game
 )
-from communitybot.playgame import Game
 
 from discord.ext.commands import Bot
 
@@ -149,7 +148,7 @@ async def game(ctx):
 
 @game.command()
 async def start():
-    start_game(bot)
+    start_game()
     await bot.say("**Game started**")
 
 @bot.group(pass_context=True)
