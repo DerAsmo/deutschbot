@@ -3,9 +3,10 @@ import time
 import uuid
 import discord
 
-from steem.commit import Commit
+from communitybot.settings import HOOKS
+from communitybot.embeds import Webhook
 
-import settings
+from steem.commit import Commit
 
 class Game:
 
@@ -50,7 +51,7 @@ class Game:
         )
 
         hook.add_field(
-            name="Score",
+            name="Message",
             value=score,
         )
 
@@ -58,9 +59,8 @@ class Game:
             hook.url = hook_url
             hook.post()
 
-    def post(self, title, body, author, reply_identifier=None):
+    def post(self, title, body, author, permlink=None, reply_identifier=None, beneficiaries=None):
         if self.debug:
-            permlink = self.get_sample_comment(author)
             permlink = self.get_sample_comment(author)
             print('---')
             print('Called post but post will not be submitted')
@@ -69,6 +69,8 @@ class Game:
             print('The posts content:')
             print(body)
 
+        elif permlink is not None:
+            self.commit.post(title, body, author, permlink, reply_identifier)
         else:
             permlink = self.build_permlink()
             self.commit.post(title, body, author, permlink, reply_identifier)
@@ -82,11 +84,13 @@ class Game:
             oLine = '<div>' + voter + ': ' + str(result) + '</div>'
             output = output + oLine
 
+        output = output + ""
+
         return output
 
     def start_game(self):
 
-        self.post_to_webhooks('test')
+        self.post_to_webhooks('A game has started!')
 
         #settings
         duration_hours = 0
@@ -97,8 +101,17 @@ class Game:
 
         # 1. create post
         title = 'testing a bot'
-        body = 'This post is ment for testing puposes. You can read in more detail what it\'s all about in the [introdutction post](https://steemit.com/@derasmo/vorstellung-von-mir-und-meiner-projektidee).'
-        permlink = self.post(title, body, self.bot_account)
+        body = 'This post is auto generated and ment for testing pupose. You can read in more detail what it\'s all about in the [introdutction post](https://steemit.com/@derasmo/vorstellung-von-mir-und-meiner-projektidee). All rewards go to @deutschbot, because I use his code, @markus.light, because he volunteered, and @reeceypie, because @ocd resteemed a post I liked.'
+
+        permlink = 'testing-a-bot-bot-bot'
+
+        beneficiaries = [
+            {'account': '@deutschbot', 'weight': 2500},
+            {'account': '@markus.light', 'weight': 3750},
+            {'account': '@reeceypie', 'weight': 3750}
+        ]
+        
+        permlink = self.post(title, body, self.bot_account, permlink=permlink, beneficiaries=beneficiaries)
 
         # 2. catch upvotes and create comments
         postid = "@" + self.bot_account + "/" + permlink;
@@ -118,14 +131,30 @@ class Game:
 
                     for vote in v_votes:
                         if vote['voter'] not in voters:
-                            comment_body = 'comment created for ' + vote['voter']
+
+                            if len(voters) < 1:
+                                comment_body = vote['voter'] + 'is collecting for @mack-bot. In Addition to the users mentioned in the post @mack-bot will receive a share. Please vote if you want them to win.'
+                                comment_beneficiaries = [
+                                                            {'account': '@deutschbot', 'weight': 2500},
+                                                            {'account': '@markus.light', 'weight': 2500},
+                                                            {'account': '@reeceypie', 'weight': 2500},
+                                                            {'account': '@mack-bot', 'weight': 2500}
+                                                        ]
+                            else:
+                                comment_beneficiaries = [
+                                                            {'account': '@deutschbot', 'weight': 2500},
+                                                            {'account': '@markus.light', 'weight': 2500},
+                                                            {'account': '@reeceypie', 'weight': 2500},
+                                                            {'account': '@spaminator', 'weight': 2500}
+                                                        ]
+                                comment_body = vote['voter'] + 'is collecting for @spaminator. In Addition to the users mentioned in the post @spaminator will receive a share. Please vote if you want them to win.'
 
                             if self.debug and self.get_sample_comment(vote['voter']) != bool(0):
                                 voters.append(vote['voter'])
-                                permlinks[vote['voter']] = self.post('', comment_body, vote['voter'], postid)
+                                permlinks[vote['voter']] = self.post('', comment_body, vote['voter'], reply_identifier=postid, beneficiaries=comment_beneficiaries)
                             elif self.debug == bool(0):
                                 voters.append(vote['voter'])
-                                permlinks[vote['voter']] = self.post('', comment_body, self.bot_account, postid)
+                                permlinks[vote['voter']] = self.post('', comment_body, self.bot_account, reply_identifier=postid, beneficiaries=comment_beneficiaries)
 
             time.sleep(5)
 
