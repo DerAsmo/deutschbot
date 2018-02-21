@@ -60,6 +60,19 @@ class Game:
             hook.post()
 
     def post(self, title, body, author, permlink=None, reply_identifier=None, beneficiaries=None):
+        print('post parameter')
+        print('--------------------')
+        print('title: ' + title)
+        print('author: ' + author)
+        if permlink is not None:
+            print('permlink: ' + permlink)
+        if reply_identifier is not None:
+            print('reply_identifier: ' + reply_identifier)
+        if beneficiaries is not None:
+            print('beneficiearies: ')
+            print(beneficiaries)
+        print('')
+        
         if self.debug:
             permlink = self.get_sample_comment(author)
             print('---')
@@ -94,9 +107,9 @@ class Game:
         self.post_to_webhooks('A game has started!')
 
         #settings
-        duration_hours = 0
+        duration_hours = 12
         duration_minutes = 0
-        duration_seconds = 5
+        duration_seconds = 0
 
         limit = 2
 
@@ -142,13 +155,13 @@ class Game:
                                                             {'account': '@mack-bot', 'weight': 2500}
                                                         ]
                             else:
+                                comment_body = '@' + vote['voter'] + 'is collecting for @spaminator. In Addition to the users mentioned in the post @spaminator will receive a share. Please vote if you want them to win.'
                                 comment_beneficiaries = [
                                                             {'account': '@deutschbot', 'weight': 2500},
                                                             {'account': '@markus.light', 'weight': 2500},
                                                             {'account': '@reeceypie', 'weight': 2500},
                                                             {'account': '@spaminator', 'weight': 2500}
                                                         ]
-                                comment_body = '@' + vote['voter'] + 'is collecting for @spaminator. In Addition to the users mentioned in the post @spaminator will receive a share. Please vote if you want them to win.'
 
                             if self.debug and self.get_sample_comment(vote['voter']) != bool(0):
                                 self.post_to_webhooks( vote['voter'] + ' joined the game.')
@@ -158,7 +171,7 @@ class Game:
                                 self.post_to_webhooks( vote['voter'] + ' joined the game.')
                                 voters.append(vote['voter'])
                                 permlink = 'testing-a-bot-bot-bot-comment-' + len(voters)
-                                permlinks[vote['voter']] = self.post('', comment_body, self.bot_account, reply_identifier=postid, beneficiaries=comment_beneficiaries)
+                                permlinks[vote['voter']] = self.post('', comment_body, self.bot_account, permlink=permlink, reply_identifier=postid, beneficiaries=comment_beneficiaries)
 
             time.sleep(5)
 
